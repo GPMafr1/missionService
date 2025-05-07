@@ -1,0 +1,106 @@
+application {  
+    config {
+    baseName missionService
+    packageName com.africom.mission
+    serverPort 8084
+    applicationType microservice
+    authenticationType jwt
+    prodDatabaseType postgresql
+    cacheProvider hazelcast
+    buildTool maven
+    databaseType sql
+    devDatabaseType postgresql
+    dtoSuffix DTO
+    embeddableLaunchScript false
+    enableHibernateCache false
+    enableSwaggerCodegen false
+    jhiPrefix jhi
+    jhipsterVersion "6.10.5"
+    serviceDiscoveryType eureka
+    skipClient true
+    skipUserManagement true
+    testFrameworks []
+    websocket false
+  }
+  entities ArticleMission, Activite, OrdreTravailClient, WorkOrder, SiteMission, PieceJointe, Tache, SST
+}
+
+enum TypeActivite {
+  MAINTENANCE,
+  FO_IT,
+  RADIO,
+  ENERGIE
+}
+
+enum ImportanceSST {
+  FAIBLE,
+  MOYENNE,
+  ELEVEE,
+  CRITIQUE
+}
+
+entity ArticleMission {
+  id String required
+  quantitePlanifiee Integer required
+  quantiteUtilisee Integer required
+}
+
+entity Activite {
+  code String required
+  designation String required
+  type TypeActivite required
+}
+
+entity OrdreTravailClient {
+  id String required
+  demandeur String
+  origine String
+  motif String required
+}
+
+entity WorkOrder {
+  id String required
+  demandeur String
+  motif String required
+  dateHeureDebutPrevisionnel ZonedDateTime required
+  dateHeureFinPrevisionnel ZonedDateTime required
+  dateHeureDebutReel ZonedDateTime
+  dateHeureFinReel ZonedDateTime
+  materielUtilise String
+  remarque String
+  numeroFicheIntervention String
+  hebergement BigDecimal
+}
+
+entity SiteMission {
+  code String required
+  commentaire String
+  dateHeureDebutReel ZonedDateTime required
+  dateHeureFinReel ZonedDateTime required
+}
+
+entity PieceJointe {
+  nom String required
+  type String required
+  contenu Blob required
+}
+
+entity Tache {
+  id String required
+  roleMission String required
+  note String required
+  remboursement BigDecimal required
+}
+
+entity SST {
+  label String
+  date LocalDate
+  importance ImportanceSST
+  commentaire String
+}
+
+dto * with mapstruct
+service * with serviceClass
+paginate * with pagination
+
+microservice ArticleMission, Activite, OrdreTravailClient, WorkOrder, SiteMission, PieceJointe, Tache, SST with missionService
